@@ -1,10 +1,13 @@
 package com.itsjehad;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.TreeSet;
 
 
-public class EventOverlap {
+
+class EventOverlap {
   public Event[] findOverlaps(Event[] input) {
     if (input == null || input.length <= 1) {
       return new Event[] {};
@@ -16,6 +19,21 @@ public class EventOverlap {
 
     findOverlaps(events, overlapping);
     return overlapping.toArray(new Event[] {});
+  }
+
+  public EventPair[] findOverlappingPairs(Event [] events){
+    ArrayList<EventPair> eventPairs = new ArrayList<EventPair>();
+    Event[] sortedEvents = copy(events);
+    Arrays.sort(sortedEvents);
+    for(int i = 0; i < sortedEvents.length-1; i++){
+      int j = i + 1;
+      while(j<sortedEvents.length && sortedEvents[j].start().isBefore(sortedEvents[i].end())){
+        eventPairs.add(new EventPair(sortedEvents[i], sortedEvents[j]));
+        j++;
+      }
+
+    }
+    return eventPairs.toArray(new EventPair[]{});
   }
 
   private void findOverlaps(Event[] sortedEvents, TreeSet<Event> overlapping) {
